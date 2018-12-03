@@ -14,15 +14,12 @@
     currentPlayer = 0;
 
     // Obtener objetos HTML necesarios
-    let diceImg, newButton, rollButton, holdButton, playerOneTxt, playerTwoTxt, playerOneCurrentTxt, playerTwoCurrentTxt;
+    let diceImg, newButton, rollButton, holdButton;
     diceImg = document.getElementsByClassName('dice')[0];
     newButton  = document.getElementsByClassName('btn-new') [0];
     rollButton  = document.getElementsByClassName('btn-roll') [0];
     holdButton = document.getElementsByClassName('btn-hold')[0];
-    playerOneTxt = document.getElementById('score-0');
-    playerOneCurrentTxt  = document.getElementById('current-0');
-    playerTwoTxt  = document.getElementById('score-1');
-    playerTwoCurrentTxt = document.getElementById('current-1');
+
 
     // Asignar event listeners
     newButton.addEventListener('click', newGame);
@@ -31,52 +28,42 @@
 
     // Inicializar juego
     initGame ();
-    render();
 
     function initGame () {
-        // Cambiar estilos si ha habido un ganador en una partida anterior
-        let winnerName = document.getElementById('name-' + currentPlayer);
-        winnerName.textContent = 'PLAYER 1';
-        winnerName.classList.remove('winner')
-        document.getElementsByClassName('player-1-panel')[0].classList.remove("active");
-        // Resto de inicializaciones
+        // Inicializacion de variables
         currentPlayer = 0;
         currentScore = 0;
         scores = [0,0];
         dice = 0;
         diceImg.style.display = 'none';
-        rollButton.style.display = 'inline';
-        holdButton.style.display = 'inline';
-    }
-
-    // Funciones core del juego
-    function render() {
-        playerOneTxt.textContent = '' + scores[0];
-        playerTwoTxt.textContent = '' + scores[1];
-        switch (currentPlayer) {
-            case 0:
-                playerOneCurrentTxt.textContent = '' + currentScore;
-                playerTwoCurrentTxt.textContent = '0';
-                break;
-            default:
-                playerTwoCurrentTxt.textContent = '' + currentScore;
-                playerOneCurrentTxt.textContent = '0';
-                break;
-        }
+        rollButton.style.display = 'block';
+        holdButton.style.display = 'block';
+        // Reinicializar estilos y elementos HTML
+        let winnerName;
+        winnerName = document.getElementById('name-' + currentPlayer);
+        winnerName.textContent = 'PLAYER 1';
+        winnerName.classList.remove('winner')
+        document.getElementsByClassName('player-1-panel')[0].classList.remove("active");
+        document.getElementsByClassName('player-0-panel')[0].classList.remove("active");
+        document.getElementsByClassName('player-0-panel')[0].classList.add("active");
+        document.getElementById('current-0').textContent = '0';
+        document.getElementById('current-1').textContent = '0';
+        document.getElementById('score-0').textContent = '0';
+        document.getElementById('score-1').textContent = '0';
     }
 
     function changeActivePlayer () {
         let panelActive;
         panelActive = document.getElementsByClassName('player-' + currentPlayer + '-panel')[0];
-        panelActive.classList.toggle("active");
+        panelActive.classList.remove("active");
         currentPlayer === 1 ? currentPlayer = 0 : currentPlayer = 1;
         panelActive = document.getElementsByClassName('player-' + currentPlayer + '-panel')[0];
-        panelActive.classList.toggle("active");
+        panelActive.classList.add("active");
         currentScore = 0;
     }
 
     function checkWinner() {
-        if (scores[currentPlayer] >= 100) { 
+        if (scores[currentPlayer] >= 10) { 
             rollButton.style.display = 'none';
             holdButton.style.display = 'none';
             let winnerName = document.getElementById('name-' + currentPlayer);
@@ -92,26 +79,37 @@
     // Manejadores de eventos
     function newGame(event) {
         initGame();
-        render();
     }
 
     function rollDice(event) {
+        // Select div to update
+        let playerCurrentTxt;
+        playerCurrentTxt = document.getElementById('current-' + currentPlayer);
+        // Roll dice and style
         dice = Math.floor(Math.random() * 6 ) + 1;
         diceImg.src = diceImg.src.substr(0,diceImg.src.search('dice')) + 'dice-' + dice + '.png';
-        diceImg.style.display = 'inline';   
+        diceImg.style.display = 'block';   
         if (dice === 1) {
+            playerCurrentTxt.textContent = '0';
             changeActivePlayer();
         } else {
+            // Update current score
             currentScore += dice;
+            playerCurrentTxt.textContent = '' + currentScore;
         }
-        render();
     }
 
     function holdScore(event) {
+        // Select div to update
+        let playerCurrentTxt, playerScore;
+        playerCurrentTxt = document.getElementById('current-' + currentPlayer);
+        playerCurrentTxt.textContent = '0';
+        playerScore = document.getElementById('score-' + currentPlayer);
         scores[currentPlayer] += currentScore;
+        playerScore.textContent = '' + scores[currentPlayer];
+        // Check winner
         let winner = checkWinner();
         if (winner !== true) {
             changeActivePlayer();
         }
-        render();
     }

@@ -36,6 +36,17 @@
             
             <img src="img/dice-5.png" alt="Dice" class="dice">
             
+            <div class="modal" id="newGameModal">
+                <div class="modal-content">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <h2>Configure your new game: </h2>
+                    Player One Name: <input type="text" name="pname-0" id="pname-0">
+                    Player Two Name: <input type="text" name="pname-1" id="pname-1">
+                    Points to win: <input type="number" name="score-win" id="score-win" value="100">
+                    <button id="aceptar-config" type="button" class="close" data-dismiss="modal" aria-hidden="true">Aceptar</button>
+                </div>
+            </div>
+
         </div>
         
         <script src="js/app.js"></script>

@@ -31,7 +31,6 @@
 
     function initGame () {
         // Inicializacion de variables
-        currentPlayer = 0;
         currentScore = 0;
         scores = [0,0];
         dice = 0;
@@ -43,13 +42,13 @@
         winnerName = document.getElementById('name-' + currentPlayer);
         winnerName.textContent = 'PLAYER 1';
         winnerName.classList.remove('winner')
-        document.getElementsByClassName('player-1-panel')[0].classList.remove("active");
-        document.getElementsByClassName('player-0-panel')[0].classList.remove("active");
         document.getElementsByClassName('player-0-panel')[0].classList.add("active");
         document.getElementById('current-0').textContent = '0';
         document.getElementById('current-1').textContent = '0';
         document.getElementById('score-0').textContent = '0';
         document.getElementById('score-1').textContent = '0';
+        // Restart the current player
+        currentPlayer = 0;
     }
 
     function changeActivePlayer () {
@@ -63,14 +62,15 @@
     }
 
     function checkWinner() {
-        if (scores[currentPlayer] >= 10) { 
+        if (scores[currentPlayer] >= 100) { 
             rollButton.style.display = 'none';
             holdButton.style.display = 'none';
             let winnerName = document.getElementById('name-' + currentPlayer);
             winnerName.textContent = "WINNER!";
             winnerName.classList.toggle('winner')
             let winnerPanel = document.getElementsByClassName('player-' + currentPlayer + '-panel')[0];
-            winnerPanel.classList.toggle("active");
+            winnerPanel.classList.remove("active");
+            diceImg.style.display = 'none';
             return true;
         }
         return false;
@@ -87,7 +87,7 @@
         playerCurrentTxt = document.getElementById('current-' + currentPlayer);
         // Roll dice and style
         dice = Math.floor(Math.random() * 6 ) + 1;
-        diceImg.src = diceImg.src.substr(0,diceImg.src.search('dice')) + 'dice-' + dice + '.png';
+        diceImg.src = 'img/dice-' + dice + '.png';
         diceImg.style.display = 'block';   
         if (dice === 1) {
             playerCurrentTxt.textContent = '0';

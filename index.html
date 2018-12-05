@@ -34,19 +34,39 @@
             <button class="btn-roll"><i class="ion-ios-loop"></i>Roll dice</button>
             <button class="btn-hold"><i class="ion-ios-download-outline"></i>Hold</button>
             
-            <img src="img/dice-5.png" alt="Dice" class="dice">
+            <img src="img/dice-5.png" alt="Dice" class="dice dice-1">
+            <img src="img/dice-5.png" alt="Dice" class="dice dice-2">
             
             <div class="modal" id="newGameModal">
                 <div class="modal-content">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h2>Configure your new game: </h2>
-                    Player One Name: <input type="text" name="pname-0" id="pname-0">
-                    Player Two Name: <input type="text" name="pname-1" id="pname-1">
-                    Points to win: <input type="number" name="score-win" id="score-win" value="100">
-                    <button id="aceptar-config" type="button" class="close" data-dismiss="modal" aria-hidden="true">Aceptar</button>
-                </div>
+                    <h2>Configure your new game</h2>
+                    <div><p>Player One Name:</p> <input class="input" type="text" name="pname-0" id="pname-0" value="Player 1"></div>
+                    <div><p>Player Two Name:</p> <input class="input" type="text" name="pname-1" id="pname-1" value="Player 2"></div>
+                    <div><p>Points to win:</p> <input class="input" type="number" name="score-win" class="number" id="score-win" value="100"></div>
+                    <div class="settings clearfix">
+                        <div class="other-settings-l">
+                            <p>Other settings</p>
+                        </div>
+                        <div class="other-settings-r">
+                            <div class="rule">
+                                <input class="checkbox" type="checkbox" id="rules-1" name="rules-1" value="rules-1" checked>
+                                <label for="rules-1">A player looses his ENTIRE score rolling two six in a row</label>
+                            </div>
+                            <div class="rule">
+                                <input class="checkbox" type="checkbox" id="rules-2" name="rules-3" value="rules-4" checked>
+                                <label for="rules-1">A player looses his CURRENT score rolling a one</label>
+                            </div>
+                            <div class="rule">
+                                <input class="checkbox" type="checkbox" id="rules-3" name="rules-3" value="rules-4" checked>
+                                <label for="rules-1">Play with two dices</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="aceptar">Aceptar</button>
+                    </div>
+                </div>            
             </div>
-
         </div>
         
         <script src="js/app.js"></script>

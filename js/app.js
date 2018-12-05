@@ -9,15 +9,19 @@ GAME RULES:
 
 */
 
+// Variables con reglas específicas configurables
+let dices, previousSix, ruleTwoSix, ruleOne, ruleTwoDices;
 // Variables core del juego
 let scores, maxScore, currentScore, currentPlayer, dice;
 currentPlayer = 0;
 
 // Obtener objetos HTML necesarios
-let diceImg, newButton, rollButton, holdButton;
-diceImg = document.getElementsByClassName('dice')[0];
-newButton  = document.getElementsByClassName('btn-new') [0];
-rollButton  = document.getElementsByClassName('btn-roll') [0];
+let dicesImg, newButton, rollButton, holdButton;
+dicesImg = [];
+dicesImg[0] = document.getElementsByClassName('dice-1')[0];
+dicesImg[1] = document.getElementsByClassName('dice-2')[0];
+newButton = document.getElementsByClassName('btn-new')[0];
+rollButton = document.getElementsByClassName('btn-roll')[0];
 holdButton = document.getElementsByClassName('btn-hold')[0];
 
 // Asignar event listeners
@@ -27,15 +31,21 @@ holdButton.addEventListener('click', holdScore);
 
 init();
 
-function init () {
+function init() {
     // Inicializacion de variables
     currentScore = 0;
-    scores = [0,0];
+    scores = [0, 0];
     maxScore = 100;
-    dice = 0;
     currentPlayer = 0;
+    previousSix = false;
+    dices = [0,0];
+    // Reglas
+    ruleTwoSix = document.getElementById('rules-1').checked;
+    ruleOne = document.getElementById('rules-2').checked;
+    ruleTwoDices = document.getElementById('rules-3').checked;
     // Reinicializar estilos y elementos HTML
-    diceImg.style.display = 'none';
+    dicesImg[0].style.display = 'none';
+    dicesImg[1].style.display = 'none';
     rollButton.style.display = 'none';
     holdButton.style.display = 'none';
     document.getElementsByClassName('player-0-panel')[0].classList.add("active");
@@ -47,7 +57,7 @@ function init () {
     document.getElementById('name-1').classList.remove('winner');
 }
 
-function newGame (p1Name, p2Name, score2Win) {
+function newGame(p1Name, p2Name, score2Win) {
     init();
     // Nombres de jugadores
     document.getElementById('name-0').textContent = p1Name;
@@ -60,7 +70,7 @@ function newGame (p1Name, p2Name, score2Win) {
     maxScore = score2Win;
 }
 
-function changeActivePlayer () {
+function changeActivePlayer() {
     let panelActive;
     panelActive = document.getElementsByClassName('player-' + currentPlayer + '-panel')[0];
     panelActive.classList.remove("active");
@@ -68,10 +78,11 @@ function changeActivePlayer () {
     panelActive = document.getElementsByClassName('player-' + currentPlayer + '-panel')[0];
     panelActive.classList.add("active");
     currentScore = 0;
+    previousSix = false;
 }
 
 function checkWinner() {
-    if (scores[currentPlayer] >= maxScore) { 
+    if (scores[currentPlayer] >= maxScore) {
         rollButton.style.display = 'none';
         holdButton.style.display = 'none';
         let winnerName = document.getElementById('name-' + currentPlayer);
@@ -79,7 +90,7 @@ function checkWinner() {
         winnerName.classList.toggle('winner')
         let winnerPanel = document.getElementsByClassName('player-' + currentPlayer + '-panel')[0];
         winnerPanel.classList.remove("active");
-        diceImg.style.display = 'none';
+        dicesImg.style.display = 'none';
         return true;
     }
     return false;
@@ -90,16 +101,32 @@ function rollDice(event) {
     let playerCurrentTxt;
     playerCurrentTxt = document.getElementById('current-' + currentPlayer);
     // Roll dice and style
-    dice = Math.floor(Math.random() * 6 ) + 1;
-    diceImg.src = 'img/dice-' + dice + '.png';
-    diceImg.style.display = 'block';   
-    if (dice === 1) {
+    dices[0] = Math.floor(Math.random() * 6) + 1;
+    dicesImg[0].src = 'img/dice-' + dices[0] + '.png';
+    dicesImg[0].style.display = 'block';
+    if (ruleTwoDices === true) {
+        dices[1] = Math.floor(Math.random() * 6) + 1;
+        dicesImg[1].src = 'img/dice-' + dices[1] + '.png';
+        dicesImg[1].style.display = 'block';
+    }    
+    if ( ruleTwoSix === true && ( previousSix === true && ( dices[0] === 6 || dices[1] === 6 ) || ( dices[0] === 6 && dices[1] === 6 ) ) ) {
+        scores[currentPlayer] = 0;
+        playerCurrentTxt.textContent = '0';
+        changeActivePlayer();
+    } else if (ruleOne === true && ( dices[0] === 1 || dices[1] === 1 ) ) {
         playerCurrentTxt.textContent = '0';
         changeActivePlayer();
     } else {
         // Update current score
-        currentScore += dice;
+        currentScore += dices[0];
+        currentScore += dices[1];
         playerCurrentTxt.textContent = '' + currentScore;
+    }   
+    // Reseteo del flag de previous flag
+    if (dices[0] === 6 || dices[1] === 6){
+        previousSix = true;
+    } else {
+        previousSix = false;
     }
 }
 
@@ -119,12 +146,9 @@ function holdScore(event) {
 }
 
 /* MODAL */
-let modal, btnAceptarConfig, btnCloseModal;
+let modal;
 modal = document.getElementById('newGameModal');
-btnCloseModal = document.getElementsByClassName("close")[0];
-btnCloseModal.addEventListener('click', closeModal);
-btnAceptarConfig = document.getElementById("aceptar-config");
-btnAceptarConfig.addEventListener('click', aceptarConfiguration);
+document.getElementById("aceptar").addEventListener('click', aceptarConfiguration);
 
 function openModal(event) {
     modal.style.display = "block";
@@ -143,7 +167,7 @@ function aceptarConfiguration(event) {
     modal.style.display = "none";
 }
 
-window.onclick = function(event) {
+window.onclick = function (event) {
     if (event.target == modal) {
         modal.style.display = "none";
     }

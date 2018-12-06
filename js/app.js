@@ -132,6 +132,7 @@ function rollDice(event) {
     playerCurrentTxt = document.getElementById('current-' + currentPlayer);
     if ( ruleTwoSix === true && ( previousSix === true && ( dices[0] === 6 || dices[1] === 6 ) || ( dices[0] === 6 && dices[1] === 6 ) ) ) {
         scores[currentPlayer] = 0;   
+        document.getElementById('score-' + currentPlayer).textContent = '0';
         console.log('Player ' + currentPlayer + ' looses all score with roll ' + dices);
         changeActivePlayer();
     } else if (ruleOne === true && ( dices[0] === 1 || dices[1] === 1 ) ) {
